@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <script src="https://threejs.org/build/three.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@pixiv/three-vrm@1.0.8/build/three-vrm.js"></script>
+</head>
+<body>
+  <canvas id="webgl"></canvas>
+  <script>
+    const canvas = document.getElementById('webgl');
+    const renderer = new THREE.WebGLRenderer({ canvas });
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 1.5, 3);
+
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(1, 1, 1);
+    scene.add(light);
+
+    // VRMモデルの読み込み
+    const loader = new THREE.GLTFLoader();
+    loader.load('path_to_model.vrm', (gltf) => {
+      THREE.VRM.from(gltf).then((vrm) => {
+        scene.add(vrm.scene);
+        vrm.scene.rotation.y = Math.PI;
+      });
+    });
+
+    // レンダリング
+    function animate() {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+    animate();
+  </script>
+</body>
+</html>
